@@ -3,20 +3,21 @@ import { useDispatch, useSelector } from 'react-redux';
 import { CopyToClipboard } from 'react-copy-to-clipboard';
 import { contractAddress } from "../contract/contractAddress";
 import { toast } from 'react-toastify';
-// import { Spinner } from './Spinner/Spinner';
+import { Spinner } from './Spinner/Spinner';
 // import { Button, Container, Row, Col, Input, Card, Spinner } from 'reactstrap';
 import Staking from "../ABI/Staking.json";
 import { Web3Context } from '../hooks/web3Context';
 import Web3 from "web3";
 import * as BigNumber from 'bignumber.js';
-
+import { green } from "tailwindcss/colors";
+<style>
+ 
+</style>
 const BnbCard = () => {
 
 
     const metaWeb3 = new Web3(window.ethereum);
     const [amount, setAmount] = React.useState(0.0);
-    // const [buttonDisable, setButtonDisable] = useState(false);
-    // const [isLoding, setIsLoding] = useState(false);
     const [currentWalletAddress, setCurrentWalletAddress] = useState("");
     const { web3Val } = useContext(Web3Context);
     const [currentContractBNBSupply, SetCurrentContractBNBSupply] = useState("");
@@ -51,7 +52,14 @@ const BnbCard = () => {
 
                 }
                 ContactConnection.methods.getBalance().call().then((result) => {
-                    SetCurrentContractBNBSupply(result);
+                    console.log("d+++++++++++++", typeof(result));
+                    console.log("d+++-----------------", result);
+                    const temp = new BigNumber(result.toString());
+                    const r = temp.div(DEFAULT_TOKEN_DECIMAL);
+                    console.log("444444444++++++++=", r.toFixed(2));
+                    console.log(typeof(temp));
+                    SetCurrentContractBNBSupply(r.toFixed(2));
+                    console.log("adf3333333333333333",currentWalletBNBSupply)
 
                 });
                 ContactConnection.methods.getMyMiners(CAddress).call().then((result) => {
@@ -62,6 +70,7 @@ const BnbCard = () => {
                 ContactConnection.methods.beanRewards(CAddress).call().then((result) => {
                     console.log("bnb =", result);
                     const Temp = new BigNumber(result.toString());
+                    console.log("tyoe==========", typeof(Temp))
                     const r = Temp.div(DEFAULT_TOKEN_DECIMAL);
                     console.log("bnb ++++++++=", r.toFixed(6));
                     SetRewardBNBSupply(r.toFixed(6));
@@ -109,7 +118,7 @@ const BnbCard = () => {
         if (currentWalletAddress !== '') {
             if (isNaN(amount) || amount === '' || amount === 0) {
                 setProcessingBuy(false);
-
+               
                 toast.warning("please input field")
                 return;
             }
@@ -119,7 +128,8 @@ const BnbCard = () => {
                 toast.success("Successfully Done.")
             }).catch((error) => {
 
-                setButtonDisable(false);
+                setProcessingBuy(false);
+            
                 toast.error("something is wrong.")
             });
         } else {
@@ -135,11 +145,11 @@ const BnbCard = () => {
             ContactConnection.methods.hatchEggs(ref).send({ from: currentWalletAddress }).on('receipt', (
             ) => {
                 setProcessingBuy(false);
-
+                
                 toast.success("Successfully Done.")
             }).on('error', () => {
 
-                setButtonDisable(false);
+                setProcessingBuy(false);
                 toast.error("something is wrong.")
             });
         } else {
@@ -149,7 +159,7 @@ const BnbCard = () => {
     }
 
     const handleWithdraw = async () => {
-
+       
         if (currentWalletAddress !== '') {
             setProcessingBuy(true);
             if (yourBeanSupply === '' || yourBeanSupply === 0) {
@@ -159,17 +169,17 @@ const BnbCard = () => {
             }
             ContactConnection.methods.sellEggs().send({ from: currentWalletAddress }).on('receipt', (
             ) => {
-
+                
                 toast.success("Successfully Done.")
                 setProcessingBuy(false);
             }).on('error', () => {
 
-
+                
                 toast.error("something is wrong.")
-                setButtonDisable(false);
+                setProcessingBuy(false);
             });
         } else {
-
+           
             toast.warning("please connect the wallet.")
             setProcessingBuy(false)
         }
@@ -190,7 +200,7 @@ const BnbCard = () => {
                         Contract
                     </p>
                     <p className="text-25 text-green3">
-                        {currentContractBNBSupply / 10 ** 18} BNB
+                        {currentContractBNBSupply} BNB
                     </p>
                 </div>
                 <div className="flex justify-between mt-10">
@@ -217,9 +227,10 @@ const BnbCard = () => {
                     </div>
 
                     <div className="py-10 flex justify-center border-b-4 border-black">
-                        <button onClick={handleDeposit} className={`${!processingBuy ? "bg-opacity-40" : ""}flex text-green3 items-center border-2 border-blue-500  active:bg-blue-800 justify-center my-20 py-20 bg-black rounded-lg w-full font-medium text-26`}>
-                            <> Take-off</>
+                        <button onClick={handleDeposit} disabled= {processingBuy} className={`${processingBuy ? "opacity-60 cursor-not-allowed bg-gray-600" : ""} flex text-green3 items-center border-2 border-blue-500  active:bg-blue-800 justify-center my-20 py-20 bg-black rounded-lg w-full font-medium text-26`}>
+                             <> Take-off</> 
                         </button>
+                        
                     </div>
 
                     <div className="flex justify-between my-20">
@@ -230,40 +241,31 @@ const BnbCard = () => {
                             {rewardBNBsupply} BNB
                         </p>
                     </div>
-                    <div className="flex flex-row justify-between">
-                        <button onClick={handleRebake} className="flex text-green3 active:bg-blue-800 items-center justify-center py-10 px-30 border-2 border-blue-500 1 rounded-lg font-medium text-20">
+                    <div className="flex flex-col justify-between mlg:flex-row">
+                        <button onClick={handleRebake}  disabled= {processingBuy} className={`${processingBuy ? "opacity-60 cursor-not-allowed bg-gray-600" : ""} flex text-green3 active:bg-blue-800 items-center justify-center py-10 px-30 border-2 border-blue-500 1 rounded-lg font-medium text-20 mb-20 mlg:mb-0`}>
                             RE-FUEL
                         </button>
-                        <button onClick={handleWithdraw} className="flex items-center active:bg-blue-800 justify-center py-10 text-green3 px-30 border-2 border-blue-500  rounded-lg font-medium text-20">
+                        <button onClick={handleWithdraw}  disabled= {processingBuy} className={`${processingBuy ? "opacity-60 cursor-not-allowed bg-gray-600" : ""} flex items-center active:bg-blue-800 justify-center py-10 text-green3 px-30 border-2 border-blue-500  rounded-lg font-medium text-20`}>
                             LAND
                         </button>
                     </div>
-                    <div className="border-b-8 border-green1">
-                        <p className="text-green1 text-30 font-semibold mb-10">Natrition Facts</p>
-                    </div>
+                 
 
                     <div className="flex flex-col py-20">
                         <div className="flex justify-between mt-10">
-                            <p className="text-25 text-green1">
+                            <p className="text-25 text-green3">
                                 Daily Return
                             </p>
-                            <p className="text-25 text-green1">
+                            <p className="text-25 text-green3">
                                 8 %
                             </p>
                         </div>
+                       
                         <div className="flex justify-between mt-10">
-                            <p className="text-25 text-green1">
-                                ARP
-                            </p>
-                            <p className="text-25 text-green1">
-                                2920%
-                            </p>
-                        </div>
-                        <div className="flex justify-between mt-10">
-                            <p className="text-25 text-green1">
+                            <p className="text-25 text-green3">
                                 Dev Fee
                             </p>
-                            <p className="text-25 text-green1">
+                            <p className="text-25 text-green3">
                                 3 %
                             </p>
                         </div>
@@ -272,20 +274,17 @@ const BnbCard = () => {
 
                 </div>
             </div>
-            <div className="rounded-2xl my-40 px-30 py-25 bg-yellow-200 container ">
-                <p className="mb-10 text-30 font-medium flex justify-center">Referral Link</p>
-                <div className=" border-2 border-black rounded-lg px-5 py-5">
-                    <CopyToClipboard text={`http://localhost:3000?ref=${currentWalletAddress}`} onCopy={copyAddress}>
+            <div className="rounded-2xl my-40 px-30 py-25 bg-black bg-opacity-70 container border-8 border-blue-500">
+                <p className="mb-10 text-30 font-medium flex justify-center text-green1">Referral Link</p>
+                <div className=" border-4 border-blue-500 rounded-lg px-10 py-10">
+                    <CopyToClipboard style={{fontSize:18 ,color: '#43C436'}} text={`http://localhost:3000?ref=${currentWalletAddress}`} onCopy={copyAddress}>
                         {/* <>
                       <p>Share your referral link<a style={{ float: 'right', cursor: 'pointer' }}><FontAwesomeIcon icon={faClipboardCheck} /></a></p> */}
-                        <a style={{
-                            fontSize: 15, textDecoration: 'underline', cursor: 'pointer',
-                            overflowWrap: 'break-word'
-                        }}>http://localhost:3000?ref={currentWalletAddress}</a>
+                        <p className="text-18 underline break-words" >http://localhost:3000?ref={currentWalletAddress}</p>
                         {/* </> */}
                     </CopyToClipboard>
                 </div>
-                <p className="text-16 w-full mt-10">Earn 12% of the BNB used to bake beans from anyone who uses your referral link</p>
+                <p className="text-16 w-full mt-10 pl-15 text-green1">Earn 12% of the BNB used to bake beans from anyone who uses your referral link</p>
 
             </div>
 
