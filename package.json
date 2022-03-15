@@ -1,4 +1,4 @@
-{
+s{
   "name": "netstorm",
   "version": "0.1.0",
   "private": true,
@@ -33,7 +33,8 @@
     "web3modal": "^1.9.5"
   },
   "scripts": {
-    "start": "craco start",
+    "start": "node server.js",
+    "edit": "craco start",
     "build": "craco build",
     "test": "craco test",
     "eject": "react-scripts eject"
