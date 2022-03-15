@@ -4,7 +4,7 @@ const path = __dirname + '/build/';
 const app = express();
 
 app.use(express.static(path));
-app.get('/', function (req, res) {
+app.get('/*', function (req, res) {
   res.sendFile(path + "index.html");
 });
 

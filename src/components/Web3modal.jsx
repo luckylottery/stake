@@ -251,7 +251,7 @@ function getChainData(chainId) {
   return chainData
 }
 
-function ellipseAddress(address = '', width = 8) {
+function ellipseAddress(address = '', width = 10) {
   if (!address) {
     return ''
   }
@@ -297,13 +297,15 @@ const providerOptions = {
   }
 }
 
-let web3Modal = new Web3Modal({
+let web3Modal
+if (typeof window !== 'undefined') {
+  web3Modal = new Web3Modal({
     //network: 'mainnet', // optional
     cacheProvider: true,
     providerOptions, // required
     theme: "dark",
   })
-
+}
 
 
 
