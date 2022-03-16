@@ -1,10 +1,8 @@
-import Logo from "../../assets/image/1.jpg";
 import Logo1 from "../../assets/image/logo3.png";
 import Bscscan from "../../assets/image/Bscscan.png";
 import Telegram from "../../assets/image/Telegram.png";
 import Tweitter from "../../assets/image/Tewitter.png";
 import BnbCard from "../../components/BNBcard";
-//import Referrals from "../../components/Referrals";
 import Web3Modals from "../../components/Web3modal";
 
 const MainLayout = ({ children }) => {
@@ -22,7 +20,6 @@ const MainLayout = ({ children }) => {
           <Web3Modals />
         </div>
         <BnbCard />
-        {/* <Referrals /> */}
         <div className="flex flex-row w-full justify-center">
         <div className="flex flex-row border-2 rounded-3xl border-blue-500 bg-cyan-300">
           <a href="https://www.bscscan.com/address/0xE2D26507981A4dAaaA8040bae1846C14E0Fb56bF" target="__blank">

@@ -3,13 +3,11 @@ import { useDispatch, useSelector } from 'react-redux';
 import { CopyToClipboard } from 'react-copy-to-clipboard';
 import { contractAddress } from "../contract/contractAddress";
 import { toast } from 'react-toastify';
-import { Spinner } from './Spinner/Spinner';
-// import { Button, Container, Row, Col, Input, Card, Spinner } from 'reactstrap';
 import Staking from "../ABI/Staking.json";
 import { Web3Context } from '../hooks/web3Context';
 import Web3 from "web3";
 import * as BigNumber from 'bignumber.js';
-import { green } from "tailwindcss/colors";
+
 <style>
  
 </style>
@@ -52,15 +50,9 @@ const BnbCard = () => {
 
                 }
                 ContactConnection.methods.getBalance().call().then((result) => {
-                    console.log("d+++++++++++++", typeof(result));
-                    console.log("d+++-----------------", result);
                     const temp = new BigNumber(result.toString());
                     const r = temp.div(DEFAULT_TOKEN_DECIMAL);
-                    console.log("444444444++++++++=", r.toFixed(2));
-                    console.log(typeof(temp));
                     SetCurrentContractBNBSupply(r.toFixed(2));
-                    console.log("adf3333333333333333",currentWalletBNBSupply)
-
                 });
                 ContactConnection.methods.getMyMiners(CAddress).call().then((result) => {
                     SetYourBeanSupply(result);
@@ -68,11 +60,8 @@ const BnbCard = () => {
 
                 });
                 ContactConnection.methods.beanRewards(CAddress).call().then((result) => {
-                    console.log("bnb =", result);
                     const Temp = new BigNumber(result.toString());
-                    console.log("tyoe==========", typeof(Temp))
                     const r = Temp.div(DEFAULT_TOKEN_DECIMAL);
-                    console.log("bnb ++++++++=", r.toFixed(6));
                     SetRewardBNBSupply(r.toFixed(6));
 
 
